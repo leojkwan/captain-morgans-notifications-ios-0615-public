@@ -9,6 +9,7 @@
 #import "FISAddShipViewController.h"
 #import "FISPiratesDataStore.h"
 #import "Ship.h"
+#import "Ship+FISExtraShipMethods.h"
 #import "Engine.h"
 
 @interface FISAddShipViewController ()
@@ -33,15 +34,35 @@
 }
 
 - (IBAction)saveButtonTapped:(id)sender {
+    
+    
+    
     FISPiratesDataStore *store = [FISPiratesDataStore sharedPiratesDataStore];
-    Ship *newShip = [NSEntityDescription insertNewObjectForEntityForName:@"Ship" inManagedObjectContext:store.managedObjectContext];
-    newShip.name = self.shipNameField.text;
-    newShip.engine = [NSEntityDescription insertNewObjectForEntityForName:@"Engine" inManagedObjectContext:store.managedObjectContext];
-    newShip.engine.engineType = self.engineTypeField.text;
+    
+    
+    NSDictionary *newThing = @{@"name" : self.shipNameField.text,
+                               @"engineType": self.engineTypeField.text};
+    
+    
+   Ship *newShip = [Ship shipFromDictionary:newThing andContext:store.managedObjectContext];
     
     [self.pirate addShipsObject:newShip];
+
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"AddingStuff" object:nil userInfo:nil];
     
-    [store save];
+
+    //Call on your method to reach out to the NS... [pass it what it
+
+    
+    
+//    
+//
+//  
+    
+
+    
+    
+//    [store save];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
